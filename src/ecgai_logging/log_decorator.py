@@ -18,7 +18,6 @@ def log(func):
             pre_function_debug_log(
                 function=function, args=args, kwargs=kwargs, logger=logger
             )
-            # signature = pre_function_info_signature(function, args, kwargs)
         elif logger_level == 20:  # level = INFO
             pre_function_info_log(function, args, kwargs, logger)
         else:
@@ -44,21 +43,15 @@ def log(func):
     def pre_function_info_signature(function, args, kwargs):
         bound_args = inspect.signature(function).bind(*args, **kwargs)
         bound_args.apply_defaults()
-        # argument_names = list(bound_args.arguments)
-        # t = function.__defaults__
-        # bound = sig.bind(*args, **kwds)
-        # bound.apply_defaults()
         loop_count = 0
         args_display = []
-        tuple_list = list(bound_args.arguments.items())
         for a in bound_args.arguments.items():
             if a[0] != "self":
                 arg_display = f"{a[0]}: {type(a[1]).__name__} = {a[1]}"
                 args_display.append(arg_display)
             loop_count += 1
 
-        # bound_kwargs = inspect.signature(function).bind(**kwargs)
-        # TODO check display alue is correct for kwargs
+        # TODO check display is correct for kwargs
         kwargs_display = [f"{k}={v!r}" for k, v in kwargs.items()]
         signature = ", ".join(args_display + kwargs_display)
         return signature
@@ -68,12 +61,12 @@ def log(func):
 
         difference = finish_time - start_time
         elapsed_time = difference.total_seconds()
-        signature = post_function_info_signature(function, result)
+        signature = post_function_info_signature(result)
         logger.info(
             f"Returns:  {function.__qualname__} {signature} and took {elapsed_time} seconds"
         )
 
-    def post_function_info_signature(function, result):
+    def post_function_info_signature(result):
         if type(result) is tuple:
             signature = post_function_tuple_signature(result)
 
@@ -98,7 +91,6 @@ def log(func):
         logger.debug(f"Module name:           {function.__module__}")
         logger.debug(f"Method name:           {function.__qualname__}")
         logger.debug(f"Working directory:     {Path.cwd()}")
-        # logger.debug(f'Error message:         {error_message}')
         logger.debug(f"Start time:            {start_time}")
         logger.debug(
             f"Variables:             {pre_function_info_signature(function=function, args=args, kwargs=kwargs)}"
@@ -115,7 +107,7 @@ def log(func):
         elapsed_time = difference.total_seconds()
         logger.debug(f"Elapsed time:          {elapsed_time}")
         logger.debug(
-            f"Returns:               {post_function_info_signature(function=function, result=result)}"
+            f"Returns:               {post_function_info_signature(result=result)}"
         )
 
         logger.debug(
@@ -123,7 +115,7 @@ def log(func):
         )
 
     def function_error_log(function, exception):
-        logger = get_logger(function=func)
+        logger = get_logger(function=function)
         logger.exception(f"-----------------error log-----------------")
         logger.exception(exception)
         result = None
@@ -140,35 +132,6 @@ def log(func):
             logger_level = logging.getLogger("root").level
         return logger_level
 
-    # @functools.wraps(func)
-    # def wrapper(*args, **kwargs):
-    #     nonlocal start_time
-    #     start_time = datetime.now()
-    #     if not inspect.iscoroutinefunction(func):
-    #         result = None
-    #         try:
-    #             pre_function_log(func, args, kwargs)
-    #             result = func(*args, **kwargs)
-    #
-    #         except Exception as e:  # only called if exception not caught is code or re-raised by function
-    #             function_error_log(function=func, exception=e)
-    #             raise
-    #         finally:
-    #             post_function_log(func, result)
-    #         return result
-    #     else:
-    #         async def tmp():
-    #             async_result = None
-    #             try:
-    #                 pre_function_log(func, args, kwargs)
-    #                 async_result = await func(*args, **kwargs)
-    #             except Exception as e:  # only called if exception not caught is code or re-raised by function
-    #                 function_error_log(e, async_result)
-    #                 raise
-    #             finally:
-    #                 post_function_log(func, async_result)
-    #             return async_result
-
     if inspect.iscoroutinefunction(func):
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
@@ -179,11 +142,12 @@ def log(func):
                 pre_function_log(func, args, kwargs)
                 async_result = await func(*args, **kwargs)
             except Exception as e:  # only called if exception not caught is code or re-raised by function
-                function_error_log(e, async_result)
+                function_error_log(function=func, exception=e)
                 raise
             finally:
                 post_function_log(func, async_result)
             return async_result
+
         return wrapper
     else:
         @functools.wraps(func)
@@ -201,10 +165,5 @@ def log(func):
             finally:
                 post_function_log(func, result)
             return result
-        return wrapper
-    # async def wrap(*args, **kwargs):
-    #     self.pre_val = self.pre()
-    #     self.result = await fn(*args, *kwargs)
-    #     self.post()
-    #     return self.result
 
+        return wrapper

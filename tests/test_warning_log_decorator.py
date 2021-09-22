@@ -40,7 +40,7 @@ FREEZE_TIME = "2021-09-14 03:21:34"
 
 def assert_warning_test(caplog, method_name, variables, returns):
     log_text = remove_spaces_from_caplog(caplog=caplog)
-    assert log_text is ''
+    assert log_text == ''
 
 
 class TestWarningFunctionLogDecorator:
