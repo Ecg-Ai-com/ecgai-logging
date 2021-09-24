@@ -15,6 +15,7 @@ from tests.mocks import (
     input_int_return_none_call_sub_function,
     input_int_return_typed_int_call_sub_function,
 )
+
 # @pytest.fixture
 # def root_logger():
 from tests.test_log_decorator import assert_info_test, FREEZE_TIME

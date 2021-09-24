@@ -14,39 +14,32 @@ def log(func):
         logger = get_logger(function)
         if logger.isEnabledFor(logging.DEBUG) or logger.isEnabledFor(logging.INFO):
             logger.info(f"----------pre function call log----------")
-            logger.info(f"Module name:            {function.__module__}")
-            logger.info(f"Method name:            {function.__qualname__}")
-            if is_async:
-                logger.debug(f'Method type:            asynchronous')
-            else:
-                logger.debug(f'Method type:           synchronous')
-            logger.debug(f"Working directory:     {Path.cwd()}")
-            logger.debug(f"Start time:            {start_time}")
-            logger.info(
-                f"Variables:              {pre_function_info_signature(function=function, args=args, kwargs=kwargs)}"
-            )
+            logger.info(module_name(function=function))
+            logger.info(method_name(function=function))
+            logger.debug(method_type(is_async=is_async))
+            logger.debug(working_directory())
+            logger.debug(start_time_string())
+            logger.info(variables(function, args, kwargs))
 
     def post_function_log(function, result):
         logger = get_logger(function)
         if logger.isEnabledFor(logging.DEBUG) or logger.isEnabledFor(logging.INFO):
             logger.info(f"----------post function call log----------")
-            logger.info(f"Module name:            {function.__module__}")
-            logger.info(f"Method name:            {function.__qualname__}")
+            logger.info(module_name(function=function))
+            logger.info(method_name(function=function))
 
             finish_time = datetime.now()
             logger.debug(f"End time:              {finish_time}")
             difference = finish_time - start_time
             elapsed_time = difference.total_seconds()
             logger.info(f"Elapsed time:           {elapsed_time}")
-            logger.info(
-                f"Returns:                {post_function_info_signature(result=result)}"
-            )
+            logger.info(returns(result=result))
 
             logger.info(
                 f"_______________________________________________________________________________________"
             )
 
-    def pre_function_info_signature(function, args, kwargs):
+    def pre_function_variable_signature(function, args, kwargs):
         bound_args = inspect.signature(function).bind(*args, **kwargs)
         bound_args.apply_defaults()
         loop_count = 0
@@ -62,7 +55,7 @@ def log(func):
         signature = ", ".join(args_display + kwargs_display)
         return signature
 
-    def post_function_info_signature(result):
+    def post_function_return_signature(result):
         if type(result) is tuple:
             signature = post_function_tuple_signature(result)
 
@@ -82,9 +75,15 @@ def log(func):
         signature += f"]"
         return signature
 
-    def function_error_log(function, exception):
+    def function_error_log(function, exception, is_async, args, kwargs):
         logger = get_logger(function=function)
-        logger.exception(f"-----------------error log-----------------")
+        logger.error(f"-----------------error log-----------------")
+        logger.error(module_name(function=function))
+        logger.error(method_name(function=function))
+        logger.error(method_type(is_async=is_async))
+        logger.error(working_directory())
+        logger.error(start_time_string())
+        logger.error(variables(function, args, kwargs))
         logger.exception(exception)
         result = None
         return result
@@ -93,6 +92,30 @@ def log(func):
         logger_name = function.__module__
         logger = logging.getLogger(logger_name)
         return logger
+
+    def module_name(function):
+        return f"Module name:            {function.__module__}"
+
+    def method_name(function):
+        return f"Method name:            {function.__qualname__}"
+
+    def method_type(is_async):
+        if is_async:
+            return f'Method type:            asynchronous'
+        else:
+            return f'Method type:           synchronous'
+
+    def working_directory():
+        return f"Working directory:     {Path.cwd()}"
+
+    def start_time_string():
+        return f"Start time:            {start_time}"
+
+    def variables(function, args, kwargs):
+        return f"Variables:              {pre_function_variable_signature(function=function, args=args, kwargs=kwargs)}"
+
+    def returns(result):
+        return f"Returns:                {post_function_return_signature(result=result)}"
 
     if inspect.iscoroutinefunction(func):
         @functools.wraps(func)
@@ -104,7 +127,7 @@ def log(func):
                 pre_function_log(func, args, kwargs, True)
                 async_result = await func(*args, **kwargs)
             except Exception as e:  # only called if exception not caught is code or re-raised by function
-                function_error_log(function=func, exception=e)
+                function_error_log(func, e, True, args, kwargs)
                 raise
             finally:
                 post_function_log(func, async_result)
@@ -122,7 +145,7 @@ def log(func):
                 result = func(*args, **kwargs)
 
             except Exception as e:  # only called if exception not caught is code or re-raised by function
-                function_error_log(function=func, exception=e)
+                function_error_log(func, e, False, args, kwargs)
                 raise
             finally:
                 post_function_log(func, result)

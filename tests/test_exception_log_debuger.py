@@ -2,9 +2,15 @@ import logging
 
 from freezegun import freeze_time
 
-from tests.mocks import mocks_module_name, exception_not_caught, exception_caught_and_not_raised, \
-    exception_caught_and_raised, MockClass
-from tests.test_log_decorator import remove_spaces_from_caplog, FREEZE_TIME
+from tests.mocks import (
+    mocks_module_name,
+    exception_not_caught,
+    exception_caught_and_not_raised,
+    exception_caught_and_raised,
+    MockClass,
+    mocks_working_directory,
+)
+from tests.test_log_decorator import FREEZE_TIME, assert_exception_test
 
 
 # logger = logging.getLogger(mocks_module_name())
@@ -14,13 +20,14 @@ from tests.test_log_decorator import remove_spaces_from_caplog, FREEZE_TIME
 # )
 #
 # logger.addHandler(handler)
-
-
-def assert_exception_test(caplog, method_name, variables, returns):
-    log_text = remove_spaces_from_caplog(caplog=caplog)
-    assert mocks_module_name() in log_text
-    assert f"Traceback (most recent call last):".replace(" ", "") in log_text
-    assert f"ZeroDivisionError: division by zero".replace(" ", "") in log_text
+# caplog,
+# module_name,
+# method_name,
+# variables,
+# returns,
+# working_directory,
+# is_async,
+# exception_name,
 
 
 class TestExceptionFunctionLogDecorator:
@@ -29,13 +36,17 @@ class TestExceptionFunctionLogDecorator:
         with caplog.at_level(level=logging.ERROR, logger=mocks_module_name()):
             try:
                 exception_not_caught(3, 3)
-            except ZeroDivisionError as e:
+            except ZeroDivisionError:
                 pass
         assert_exception_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="exception_not_caught",
             variables="value1: int = 3, value2: int = 3",
-            returns="NoneType = None",
+            returns="int = 6",
+            working_directory=mocks_working_directory(),
+            is_async=False,
+            exception_name="ZeroDivisionError",
         )
 
     @freeze_time(FREEZE_TIME)
@@ -43,22 +54,26 @@ class TestExceptionFunctionLogDecorator:
         with caplog.at_level(level=logging.ERROR, logger=mocks_module_name()):
             try:
                 exception_caught_and_not_raised(3, 3)
-            except ZeroDivisionError as e:
+            except ZeroDivisionError:
                 pass
-        assert caplog.text == ''
+        assert caplog.text == ""
 
     @freeze_time(FREEZE_TIME)
     def test_exception_caught_and_raised(self, caplog):
         with caplog.at_level(level=logging.ERROR, logger=mocks_module_name()):
             try:
                 exception_caught_and_raised(3, 3)
-            except ZeroDivisionError as e:
+            except ZeroDivisionError:
                 pass
         assert_exception_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="exception_caught_and_raised",
             variables="value1: int = 3, value2: int = 3",
-            returns="NoneType = None",
+            returns="int = 6",
+            working_directory=mocks_working_directory(),
+            is_async=False,
+            exception_name="ZeroDivisionError",
         )
 
 
@@ -69,13 +84,17 @@ class TestExceptionClassLogDecorator:
             try:
                 mock = MockClass()
                 mock.exception_not_caught(3, 3)
-            except ZeroDivisionError as e:
+            except ZeroDivisionError:
                 pass
         assert_exception_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.exception_not_caught",
             variables="value1: int = 3, value2: int = 3",
-            returns="NoneType = None",
+            returns="int = 6",
+            working_directory=mocks_working_directory(),
+            is_async=False,
+            exception_name="ZeroDivisionError",
         )
 
     @freeze_time(FREEZE_TIME)
@@ -84,9 +103,9 @@ class TestExceptionClassLogDecorator:
             try:
                 mock = MockClass()
                 mock.exception_caught_and_not_raised(3, 3)
-            except ZeroDivisionError as e:
+            except ZeroDivisionError:
                 pass
-        assert caplog.text == ''
+        assert caplog.text == ""
 
     @freeze_time(FREEZE_TIME)
     def test_exception_caught_and_raised(self, caplog):
@@ -94,11 +113,15 @@ class TestExceptionClassLogDecorator:
             try:
                 mock = MockClass()
                 mock.exception_caught_and_raised(3, 3)
-            except ZeroDivisionError as e:
+            except ZeroDivisionError:
                 pass
         assert_exception_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.exception_caught_and_raised",
             variables="value1: int = 3, value2: int = 3",
-            returns="NoneType = None",
+            returns="int = 6",
+            working_directory=mocks_working_directory(),
+            is_async=False,
+            exception_name="ZeroDivisionError",
         )

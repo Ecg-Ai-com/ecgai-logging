@@ -14,6 +14,7 @@ from tests.mocks import (
     input_int_return_typed_int_call_sub_function,
     mocks_working_directory,
 )
+
 # @pytest.fixture
 # def root_logger():
 from tests.test_log_decorator import assert_debug_test, FREEZE_TIME
@@ -40,7 +41,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -54,7 +55,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -68,7 +69,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -82,7 +83,7 @@ class TestDebugFunctionLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -96,7 +97,7 @@ class TestDebugFunctionLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -110,7 +111,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
         assert_debug_test(
             caplog=caplog,
@@ -119,7 +120,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -133,7 +134,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
         assert_debug_test(
             caplog=caplog,
@@ -142,7 +143,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
 
@@ -159,7 +160,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -174,7 +175,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -189,7 +190,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -204,7 +205,7 @@ class TestDebugClassLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -219,7 +220,7 @@ class TestDebugClassLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -234,7 +235,7 @@ class TestDebugClassLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"tuple[str = total return value, int = 6]",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -249,7 +250,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
         assert_debug_test(
             caplog=caplog,
@@ -258,7 +259,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -273,7 +274,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )
         assert_debug_test(
             caplog=caplog,
@@ -282,5 +283,5 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
-            is_async=False
+            is_async=False,
         )

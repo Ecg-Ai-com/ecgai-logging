@@ -12,7 +12,9 @@ def remove_spaces_from_caplog(caplog):
     return log_text
 
 
-def assert_debug_test(caplog, module_name, method_name, variables, returns, working_directory, is_async):
+def assert_debug_test(
+    caplog, module_name, method_name, variables, returns, working_directory, is_async
+):
     log_text = remove_spaces_from_caplog(caplog=caplog)
     assert_info_test(
         caplog=caplog,
@@ -22,9 +24,9 @@ def assert_debug_test(caplog, module_name, method_name, variables, returns, work
         returns=returns,
     )
     if is_async:
-        assert f'Method type:           asynchronous)'
+        assert f"Method type:           asynchronous)"
     else:
-        assert f'Method type:           synchronous)'
+        assert f"Method type:           synchronous)"
 
     assert f"Working directory:     {working_directory}"
     assert "Start time: 2021-09-14 03:21:34".replace(" ", "") in log_text
@@ -39,6 +41,36 @@ def assert_info_test(caplog, module_name, method_name, variables, returns):
     assert f"Variables: {variables}".replace(" ", "") in log_text
     assert f"Returns: {returns}".replace(" ", "") in log_text
     assert "Elapsed time: 0.0".replace(" ", "") in log_text
+
+
+def assert_exception_test(
+    caplog,
+    module_name,
+    method_name,
+    variables,
+    working_directory,
+    is_async,
+    exception_name,
+):
+    log_text = remove_spaces_from_caplog(caplog=caplog)
+    assert module_name in log_text
+    assert f"Method name: {method_name}".replace(" ", "") in log_text
+    assert f"Variables: {variables}".replace(" ", "") in log_text
+    if is_async:
+        assert f"Method type:           asynchronous)"
+    else:
+        assert f"Method type:           synchronous)"
+
+    assert f"Working directory:     {working_directory}"
+    assert "Start time: 2021-09-14 03:21:34".replace(" ", "") in log_text
+    assert f"Traceback (most recent call last):".replace(" ", "") in log_text
+    assert f"{exception_name}: division by zero".replace(" ", "") in log_text
+
+
+# noinspection PyUnusedLocal
+def assert_warning_test(caplog, method_name, variables, returns):
+    log_text = remove_spaces_from_caplog(caplog=caplog)
+    assert log_text == ""
 
 
 def test_mock_module_name():

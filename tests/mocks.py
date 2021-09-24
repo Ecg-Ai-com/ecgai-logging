@@ -43,19 +43,19 @@ def input_int_return_untyped_int(value1: int, value2: int) -> int:
 @log
 def input_int_return_untyped_str(value1: int, value2: int):
     _ = value1 + value2
-    return 'total return value'
+    return "total return value"
 
 
 @log
 def input_int_return_untyped_tuple_str_and_int(value1: int, value2: int):
     value = value1 + value2
-    return 'total return value', value
+    return "total return value", value
 
 
 @log
 def input_int_return_typed_str(value1: int, value2: int) -> str:
     _ = value1 + value2
-    return 'total return value'
+    return "total return value"
 
 
 # noinspection PyUnusedLocal
@@ -106,21 +106,23 @@ class MockClass:
     @log
     def input_int_return_untyped_str(self, value1: int, value2: int):
         _ = value1 + value2
-        return 'total return value'
+        return "total return value"
 
     @log
     def input_int_return_typed_str(self, value1: int, value2: int) -> str:
         _ = value1 + value2
-        return 'total return value'
+        return "total return value"
 
     @log
-    def input_int_return_typed_int_call_sub_function(self, value1: int, value2: int) -> int:
+    def input_int_return_typed_int_call_sub_function(
+        self, value1: int, value2: int
+    ) -> int:
         return self.input_int_return_typed_int(value1, value2)
 
     @log
     def input_int_return_untyped_tuple_str_and_int(self, value1: int, value2: int):
         value = value1 + value2
-        return 'total return value', value
+        return "total return value", value
 
     # noinspection PyUnusedLocal
     @log

@@ -13,12 +13,7 @@ from tests.mocks import (
     input_int_return_typed_int_call_sub_function,
     input_int_return_none_call_sub_function,
 )
-from tests.test_log_decorator import remove_spaces_from_caplog, FREEZE_TIME
-
-
-def assert_warning_test(caplog, method_name, variables, returns):
-    log_text = remove_spaces_from_caplog(caplog=caplog)
-    assert log_text == ""
+from tests.test_log_decorator import FREEZE_TIME, assert_warning_test
 
 
 class TestWarningFunctionLogDecorator:

@@ -20,7 +20,7 @@ async def async_input_int_return_untyped_int(value1: int, value2: int) -> int:
 @log
 async def async_input_int_return_untyped_str(value1: int, value2: int):
     _ = value1 + value2
-    return 'total return value'
+    return "total return value"
 
 
 # noinspection PyUnusedLocal
@@ -45,3 +45,26 @@ async def async_exception_caught_and_not_raised(value1: int, value2: int):
 @log
 async def async_exception_not_caught(value1: int, value2: int):
     _ = 5 / 0
+
+
+class MockAsyncClass:
+    # noinspection PyUnusedLocal
+    @log
+    async def async_exception_caught_and_raised(self, value1: int, value2: int):
+        try:
+            _ = 5 / 0
+        except ZeroDivisionError as e:
+            raise
+
+    # noinspection PyUnusedLocal
+    @log
+    async def async_exception_caught_and_not_raised(self, value1: int, value2: int):
+        try:
+            _ = 5 / 0
+        except ZeroDivisionError as e:
+            pass
+
+    # noinspection PyUnusedLocal
+    @log
+    async def async_exception_not_caught(self, value1: int, value2: int):
+        _ = 5 / 0
