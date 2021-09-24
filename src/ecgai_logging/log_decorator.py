@@ -12,33 +12,35 @@ def log(func):
 
     def pre_function_log(function, args, kwargs):
         logger = get_logger(function)
-        logger_level = get_logger_level(logger=logger)
-
-        if logger_level == 10:  # level = DEBUG
-            pre_function_debug_log(
-                function=function, args=args, kwargs=kwargs, logger=logger
+        if logger.isEnabledFor(logging.DEBUG) or logger.isEnabledFor(logging.INFO):
+            logger.info(f"----------pre function call log----------")
+            logger.info(f"Module name:            {function.__module__}")
+            logger.info(f"Method name:            {function.__qualname__}")
+            logger.debug(f"Working directory:     {Path.cwd()}")
+            logger.debug(f"Start time:            {start_time}")
+            logger.info(
+                f"Variables:              {pre_function_info_signature(function=function, args=args, kwargs=kwargs)}"
             )
-        elif logger_level == 20:  # level = INFO
-            pre_function_info_log(function, args, kwargs, logger)
-        else:
-            pass
 
     def post_function_log(function, result):
-        logger = get_logger(function=function)
-        logger_level = get_logger_level(logger=logger)
+        logger = get_logger(function)
+        if logger.isEnabledFor(logging.DEBUG) or logger.isEnabledFor(logging.INFO):
+            logger.info(f"----------post function call log----------")
+            logger.info(f"Module name:           {function.__module__}")
+            logger.info(f"Method name:           {function.__qualname__}")
 
-        if logger_level == 10:  # level = DEBUG
-            post_function_debug_log(function=function, result=result, logger=logger)
-        elif logger_level == 20:  # level = INFO
-            post_function_info_log(function=function, result=result, logger=logger)
-        else:
-            pass
+            finish_time = datetime.now()
+            logger.debug(f"End time:              {finish_time}")
+            difference = finish_time - start_time
+            elapsed_time = difference.total_seconds()
+            logger.info(f"Elapsed time:          {elapsed_time}")
+            logger.info(
+                f"Returns:               {post_function_info_signature(result=result)}"
+            )
 
-    def pre_function_info_log(function, args, kwargs, logger):
-        signature = pre_function_info_signature(
-            function=function, args=args, kwargs=kwargs
-        )
-        logger.info(f"Method name:    {function.__qualname__}({signature})")
+            logger.info(
+                f"_______________________________________________________________________________________"
+            )
 
     def pre_function_info_signature(function, args, kwargs):
         bound_args = inspect.signature(function).bind(*args, **kwargs)
@@ -55,16 +57,6 @@ def log(func):
         kwargs_display = [f"{k}={v!r}" for k, v in kwargs.items()]
         signature = ", ".join(args_display + kwargs_display)
         return signature
-
-    def post_function_info_log(function, result, logger):
-        finish_time = datetime.now()
-
-        difference = finish_time - start_time
-        elapsed_time = difference.total_seconds()
-        signature = post_function_info_signature(result)
-        logger.info(
-            f"Returns:  {function.__qualname__} {signature} and took {elapsed_time} seconds"
-        )
 
     def post_function_info_signature(result):
         if type(result) is tuple:
@@ -86,34 +78,6 @@ def log(func):
         signature += f"]"
         return signature
 
-    def pre_function_debug_log(function, args, kwargs, logger):
-        logger.debug(f"----------pre function call log----------")
-        logger.debug(f"Module name:           {function.__module__}")
-        logger.debug(f"Method name:           {function.__qualname__}")
-        logger.debug(f"Working directory:     {Path.cwd()}")
-        logger.debug(f"Start time:            {start_time}")
-        logger.debug(
-            f"Variables:             {pre_function_info_signature(function=function, args=args, kwargs=kwargs)}"
-        )
-
-    def post_function_debug_log(function, result, logger):
-        logger.debug(f"----------post function call log----------")
-        logger.debug(f"Module name:           {function.__module__}")
-        logger.debug(f"Method name:           {function.__qualname__}")
-
-        finish_time = datetime.now()
-        logger.debug(f"End time:              {finish_time}")
-        difference = finish_time - start_time
-        elapsed_time = difference.total_seconds()
-        logger.debug(f"Elapsed time:          {elapsed_time}")
-        logger.debug(
-            f"Returns:               {post_function_info_signature(result=result)}"
-        )
-
-        logger.debug(
-            f"_______________________________________________________________________________________"
-        )
-
     def function_error_log(function, exception):
         logger = get_logger(function=function)
         logger.exception(f"-----------------error log-----------------")
@@ -125,12 +89,6 @@ def log(func):
         logger_name = function.__module__
         logger = logging.getLogger(logger_name)
         return logger
-
-    def get_logger_level(logger):
-        logger_level = logger.level
-        if logger_level == 0:
-            logger_level = logging.getLogger("root").level
-        return logger_level
 
     if inspect.iscoroutinefunction(func):
         @functools.wraps(func)

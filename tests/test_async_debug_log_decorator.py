@@ -6,12 +6,13 @@ import colorlog
 import pytest
 from freezegun import freeze_time
 
-from tests.mocks import mocks_module_name
 from tests.mocks_async import (
     async_input_int_return_untyped_int,
-    mocks_async_module_name, async_input_int_return_untyped_str,
+    mocks_async_module_name,
+    async_input_int_return_untyped_str,
+    mocks_async_working_directory,
 )
-from tests.test_log_decorator import remove_spaces_from_caplog
+from tests.test_log_decorator import assert_debug_test
 
 logger = logging.getLogger(mocks_async_module_name())
 # logger.level = logging.DEBUG
@@ -27,17 +28,6 @@ logger.addHandler(handler)
 FREEZE_TIME = "2021-09-14 03:21:34"
 
 
-def assert_debug_test(caplog, method_name, variables, returns):
-    log_text = remove_spaces_from_caplog(caplog=caplog)
-    assert mocks_module_name() in log_text
-    assert f"Method name: {method_name}".replace(" ", "") in log_text
-    assert f"Variables: {variables}".replace(" ", "") in log_text
-    assert f"Returns: {returns}".replace(" ", "") in log_text
-    assert "Start time: 2021-09-14 03:21:34".replace(" ", "") in log_text
-    assert "End time: 2021-09-14 03:21:34".replace(" ", "") in log_text
-    assert "Elapsed time: 0.0".replace(" ", "") in log_text
-
-
 class TestDebugFunctionLogDecorator:
     @freeze_time(FREEZE_TIME)
     @pytest.mark.asyncio
@@ -49,9 +39,11 @@ class TestDebugFunctionLogDecorator:
             result = await task
         assert_debug_test(
             caplog=caplog,
+            module_name=mocks_async_module_name(),
             method_name="async_input_int_return_untyped_int",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
+            working_directory=mocks_async_working_directory(),
         )
 
     @freeze_time(FREEZE_TIME)
@@ -64,7 +56,9 @@ class TestDebugFunctionLogDecorator:
             # result = await task
         assert_debug_test(
             caplog=caplog,
+            module_name=mocks_async_module_name(),
             method_name="async_input_int_return_untyped_str",
             variables="value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
+            working_directory=mocks_async_working_directory(),
         )

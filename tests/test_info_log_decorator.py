@@ -17,12 +17,14 @@ from tests.mocks import (
     input_int_return_untyped_int,
     input_int_return_typed_str,
     input_int_return_untyped_str,
-    MockClass, input_int_return_none_call_sub_function, input_int_return_typed_int_call_sub_function,
+    MockClass,
+    input_int_return_none_call_sub_function,
+    input_int_return_typed_int_call_sub_function,
 )
 
 # @pytest.fixture
 # def root_logger():
-from tests.test_log_decorator import remove_spaces_from_caplog
+from tests.test_log_decorator import remove_spaces_from_caplog, assert_info_test
 
 logger = logging.getLogger(mocks_module_name())
 # logger.level = logging.DEBUG
@@ -38,16 +40,6 @@ logger.addHandler(handler)
 FREEZE_TIME = "2021-09-14 03:21:34"
 
 
-def assert_info_test(caplog, method_name, variables, returns):
-    log_text = remove_spaces_from_caplog(caplog=caplog)
-    assert mocks_module_name() in log_text
-    assert f"Method name: {method_name}({variables})".replace(" ", "") in log_text
-    assert (
-        f"Returns: {method_name}{returns} and took 0.0 seconds".replace(" ", "")
-        in log_text
-    )
-
-
 class TestInfoFunctionLogDecorator:
     @freeze_time(FREEZE_TIME)
     def test_info_function_input_int_return_none(self, caplog):
@@ -55,6 +47,7 @@ class TestInfoFunctionLogDecorator:
             input_int_return_none(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="input_int_return_none",
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
@@ -66,6 +59,7 @@ class TestInfoFunctionLogDecorator:
             input_int_return_typed_int(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="input_int_return_typed_int",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
@@ -77,6 +71,7 @@ class TestInfoFunctionLogDecorator:
             input_int_return_untyped_int(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="input_int_return_untyped_int",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
@@ -88,6 +83,7 @@ class TestInfoFunctionLogDecorator:
             input_int_return_typed_str(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name=f"input_int_return_typed_str",
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
@@ -99,6 +95,7 @@ class TestInfoFunctionLogDecorator:
             input_int_return_untyped_str(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name=f"input_int_return_untyped_str",
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
@@ -110,12 +107,14 @@ class TestInfoFunctionLogDecorator:
             input_int_return_none_call_sub_function(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="input_int_return_none",
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
         )
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="input_int_return_none_call_sub_function",
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
@@ -127,12 +126,14 @@ class TestInfoFunctionLogDecorator:
             input_int_return_typed_int_call_sub_function(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="input_int_return_typed_int_call_sub_function",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
         )
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="input_int_return_typed_int",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
@@ -147,6 +148,7 @@ class TestInfoClassLogDecorator:
             mock.input_int_return_none(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.input_int_return_none",
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
@@ -159,6 +161,7 @@ class TestInfoClassLogDecorator:
             mock.input_int_return_typed_int(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.input_int_return_typed_int",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
@@ -171,6 +174,7 @@ class TestInfoClassLogDecorator:
             mock.input_int_return_untyped_int(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.input_int_return_untyped_int",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
@@ -183,6 +187,7 @@ class TestInfoClassLogDecorator:
             mock.input_int_return_typed_str(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name=f"MockClass.input_int_return_typed_str",
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
@@ -195,6 +200,7 @@ class TestInfoClassLogDecorator:
             mock.input_int_return_untyped_str(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name=f"MockClass.input_int_return_untyped_str",
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
@@ -204,15 +210,17 @@ class TestInfoClassLogDecorator:
     def test_debug_function_call_sub_function__input_int_return_none(self, caplog):
         with caplog.at_level(level=logging.INFO, logger=mocks_module_name()):
             mock = MockClass()
-            mock.            input_int_return_none_call_sub_function(3, 3)
+            mock.input_int_return_none_call_sub_function(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.input_int_return_none",
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
         )
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.input_int_return_none_call_sub_function",
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
@@ -222,15 +230,17 @@ class TestInfoClassLogDecorator:
     def test_debug_function_call_sub_function_input_int_return_typed_int(self, caplog):
         with caplog.at_level(level=logging.INFO, logger=mocks_module_name()):
             mock = MockClass()
-            mock.           input_int_return_typed_int_call_sub_function(3, 3)
+            mock.input_int_return_typed_int_call_sub_function(3, 3)
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.input_int_return_typed_int_call_sub_function",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
         )
         assert_info_test(
             caplog=caplog,
+            module_name=mocks_module_name(),
             method_name="MockClass.input_int_return_typed_int",
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
