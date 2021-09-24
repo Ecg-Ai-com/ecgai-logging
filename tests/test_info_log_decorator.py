@@ -1,7 +1,5 @@
 import logging
-import sys
 
-import colorlog
 from freezegun import freeze_time
 
 from tests.mocks import (
@@ -15,18 +13,7 @@ from tests.mocks import (
     input_int_return_none_call_sub_function,
     input_int_return_typed_int_call_sub_function,
 )
-
-# @pytest.fixture
-# def root_logger():
 from tests.test_log_decorator import assert_info_test, FREEZE_TIME
-
-logger = logging.getLogger(mocks_module_name())
-handler = colorlog.StreamHandler(sys.stdout)
-handler.setFormatter(
-    colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
-)
-
-logger.addHandler(handler)
 
 
 class TestInfoFunctionLogDecorator:
