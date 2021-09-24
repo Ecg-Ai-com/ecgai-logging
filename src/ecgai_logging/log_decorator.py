@@ -1,14 +1,14 @@
 import functools
 import inspect
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
 def log(func):
     # Declared for use by the whole function but reset by wrapper function due to an issue with freeze_time in
     # testing classes
-    start_time = datetime.now()
+    start_time = datetime.utcnow()
 
     def pre_function_log(function, args, kwargs, is_async):
         logger = get_logger(function)
@@ -28,7 +28,7 @@ def log(func):
             logger.info(module_name(function=function))
             logger.info(method_name(function=function))
 
-            finish_time = datetime.now()
+            finish_time = datetime.utcnow()
             logger.debug(f"End time:              {finish_time}")
             difference = finish_time - start_time
             elapsed_time = difference.total_seconds()
@@ -121,7 +121,7 @@ def log(func):
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
             nonlocal start_time
-            start_time = datetime.now()
+            start_time = datetime.utcnow()
             async_result = None
             try:
                 pre_function_log(func, args, kwargs, True)
