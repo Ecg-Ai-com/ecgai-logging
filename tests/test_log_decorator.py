@@ -1,7 +1,5 @@
 from pathlib import Path
 
-from fluentcheck import Is
-
 from tests.mocks import mocks_module_name, mocks_working_directory
 
 FREEZE_TIME = "2021-09-14 03:21:34"
@@ -75,7 +73,7 @@ def assert_warning_test(caplog, method_name, variables, returns):
 
 def test_mock_module_name():
     actual_name = mocks_module_name()
-    Is(actual_name).matches("tests.mocks")
+    assert actual_name == "tests.mocks"
 
 
 def test_mocks_working_directory():
