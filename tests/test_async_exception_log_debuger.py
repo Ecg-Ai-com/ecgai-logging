@@ -1,27 +1,21 @@
 import logging
-import sys
 
-import colorlog
 import pytest
 from freezegun import freeze_time
 
-from tests.mocks import mocks_module_name, exception_not_caught, exception_caught_and_not_raised, \
-    exception_caught_and_raised, MockClass
+from tests.mocks import mocks_module_name, MockClass
 from tests.mocks_async import async_exception_not_caught, async_exception_caught_and_not_raised, \
     async_exception_caught_and_raised, mocks_async_module_name
-from tests.test_log_decorator import remove_spaces_from_caplog
+from tests.test_log_decorator import remove_spaces_from_caplog, FREEZE_TIME
 
-FREEZE_TIME = "2021-09-14 03:21:34"
-logger = logging.getLogger(mocks_module_name())
-# logger.level = logging.DEBUG
-# stream_handler = logging.StreamHandler(sys.stdout)
-# logger.addHandler(stream_handler)
-handler = colorlog.StreamHandler(sys.stdout)
-handler.setFormatter(
-    colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
-)
 
-logger.addHandler(handler)
+# logger = logging.getLogger(mocks_module_name())
+# handler = colorlog.StreamHandler(sys.stdout)
+# handler.setFormatter(
+#     colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
+# )
+#
+# logger.addHandler(handler)
 
 
 def assert_exception_test(caplog, method_name, variables, returns):
@@ -53,7 +47,7 @@ class TestAsyncExceptionFunctionLogDecorator:
     async def test_exception_caught_and_not_raised(self, caplog):
         with caplog.at_level(level=logging.ERROR, logger=mocks_async_module_name()):
             try:
-                async_exception_caught_and_not_raised(3, 3)
+                await async_exception_caught_and_not_raised(3, 3)
             except ZeroDivisionError as e:
                 pass
         assert caplog.text == ''

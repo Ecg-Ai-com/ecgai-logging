@@ -118,7 +118,7 @@ class MockClass:
         return self.input_int_return_typed_int(value1, value2)
 
     @log
-    def input_int_return_untyped_tuple_str_and_int(self,value1: int, value2: int):
+    def input_int_return_untyped_tuple_str_and_int(self, value1: int, value2: int):
         value = value1 + value2
         return 'total return value', value
 

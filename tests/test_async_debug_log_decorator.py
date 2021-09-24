@@ -1,8 +1,6 @@
 import asyncio
 import logging
-import sys
 
-import colorlog
 import pytest
 from freezegun import freeze_time
 
@@ -12,20 +10,16 @@ from tests.mocks_async import (
     async_input_int_return_untyped_str,
     mocks_async_working_directory,
 )
-from tests.test_log_decorator import assert_debug_test
+from tests.test_log_decorator import assert_debug_test, FREEZE_TIME
 
-logger = logging.getLogger(mocks_async_module_name())
-# logger.level = logging.DEBUG
-# stream_handler = logging.StreamHandler(sys.stdout)
-# logger.addHandler(stream_handler)
-handler = colorlog.StreamHandler(sys.stdout)
-handler.setFormatter(
-    colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
-)
 
-logger.addHandler(handler)
-
-FREEZE_TIME = "2021-09-14 03:21:34"
+# logger = logging.getLogger(mocks_async_module_name())
+# handler = colorlog.StreamHandler(sys.stdout)
+# handler.setFormatter(
+#     colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
+# )
+#
+# logger.addHandler(handler)
 
 
 class TestDebugFunctionLogDecorator:
@@ -44,6 +38,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_async_working_directory(),
+            is_async=True,
         )
 
     @freeze_time(FREEZE_TIME)
@@ -61,4 +56,5 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_async_working_directory(),
+            is_async=True,
         )

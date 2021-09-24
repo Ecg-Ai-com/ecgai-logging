@@ -10,12 +10,16 @@ def log(func):
     # testing classes
     start_time = datetime.now()
 
-    def pre_function_log(function, args, kwargs):
+    def pre_function_log(function, args, kwargs, is_async):
         logger = get_logger(function)
         if logger.isEnabledFor(logging.DEBUG) or logger.isEnabledFor(logging.INFO):
             logger.info(f"----------pre function call log----------")
             logger.info(f"Module name:            {function.__module__}")
             logger.info(f"Method name:            {function.__qualname__}")
+            if is_async:
+                logger.debug(f'Method type:            asynchronous')
+            else:
+                logger.debug(f'Method type:           synchronous')
             logger.debug(f"Working directory:     {Path.cwd()}")
             logger.debug(f"Start time:            {start_time}")
             logger.info(
@@ -26,16 +30,16 @@ def log(func):
         logger = get_logger(function)
         if logger.isEnabledFor(logging.DEBUG) or logger.isEnabledFor(logging.INFO):
             logger.info(f"----------post function call log----------")
-            logger.info(f"Module name:           {function.__module__}")
-            logger.info(f"Method name:           {function.__qualname__}")
+            logger.info(f"Module name:            {function.__module__}")
+            logger.info(f"Method name:            {function.__qualname__}")
 
             finish_time = datetime.now()
             logger.debug(f"End time:              {finish_time}")
             difference = finish_time - start_time
             elapsed_time = difference.total_seconds()
-            logger.info(f"Elapsed time:          {elapsed_time}")
+            logger.info(f"Elapsed time:           {elapsed_time}")
             logger.info(
-                f"Returns:               {post_function_info_signature(result=result)}"
+                f"Returns:                {post_function_info_signature(result=result)}"
             )
 
             logger.info(
@@ -97,7 +101,7 @@ def log(func):
             start_time = datetime.now()
             async_result = None
             try:
-                pre_function_log(func, args, kwargs)
+                pre_function_log(func, args, kwargs, True)
                 async_result = await func(*args, **kwargs)
             except Exception as e:  # only called if exception not caught is code or re-raised by function
                 function_error_log(function=func, exception=e)
@@ -114,7 +118,7 @@ def log(func):
             start_time = datetime.now()
             result = None
             try:
-                pre_function_log(func, args, kwargs)
+                pre_function_log(func, args, kwargs, False)
                 result = func(*args, **kwargs)
 
             except Exception as e:  # only called if exception not caught is code or re-raised by function

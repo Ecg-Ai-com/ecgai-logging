@@ -4,13 +4,15 @@ from fluentcheck import Is
 
 from tests.mocks import mocks_module_name, mocks_working_directory
 
+FREEZE_TIME = "2021-09-14 03:21:34"
+
 
 def remove_spaces_from_caplog(caplog):
     log_text = caplog.text.replace(" ", "")
     return log_text
 
 
-def assert_debug_test(caplog, module_name, method_name, variables, returns, working_directory):
+def assert_debug_test(caplog, module_name, method_name, variables, returns, working_directory, is_async):
     log_text = remove_spaces_from_caplog(caplog=caplog)
     assert_info_test(
         caplog=caplog,
@@ -19,6 +21,11 @@ def assert_debug_test(caplog, module_name, method_name, variables, returns, work
         variables=variables,
         returns=returns,
     )
+    if is_async:
+        assert f'Method type:           asynchronous)'
+    else:
+        assert f'Method type:           synchronous)'
+
     assert f"Working directory:     {working_directory}"
     assert "Start time: 2021-09-14 03:21:34".replace(" ", "") in log_text
     assert "End time: 2021-09-14 03:21:34".replace(" ", "") in log_text

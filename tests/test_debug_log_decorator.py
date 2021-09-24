@@ -1,7 +1,5 @@
 import logging
-import sys
 
-import colorlog
 from freezegun import freeze_time
 
 from tests.mocks import (
@@ -16,23 +14,18 @@ from tests.mocks import (
     input_int_return_typed_int_call_sub_function,
     mocks_working_directory,
 )
-
 # @pytest.fixture
 # def root_logger():
-from tests.test_log_decorator import assert_debug_test
+from tests.test_log_decorator import assert_debug_test, FREEZE_TIME
 
-logger = logging.getLogger(mocks_module_name())
-# logger.level = logging.DEBUG
-# stream_handler = logging.StreamHandler(sys.stdout)
-# logger.addHandler(stream_handler)
-handler = colorlog.StreamHandler(sys.stdout)
-handler.setFormatter(
-    colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
-)
 
-logger.addHandler(handler)
-
-FREEZE_TIME = "2021-09-14 03:21:34"
+# logger = logging.getLogger(mocks_module_name())
+# handler = colorlog.StreamHandler(sys.stdout)
+# handler.setFormatter(
+#     colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
+# )
+#
+# logger.addHandler(handler)
 
 
 class TestDebugFunctionLogDecorator:
@@ -47,6 +40,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -60,6 +54,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -73,6 +68,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -86,6 +82,7 @@ class TestDebugFunctionLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -99,6 +96,7 @@ class TestDebugFunctionLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -112,6 +110,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
         assert_debug_test(
             caplog=caplog,
@@ -120,6 +119,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -133,6 +133,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
         assert_debug_test(
             caplog=caplog,
@@ -141,6 +142,7 @@ class TestDebugFunctionLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
 
@@ -157,6 +159,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -171,6 +174,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -185,6 +189,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -199,6 +204,7 @@ class TestDebugClassLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -213,10 +219,11 @@ class TestDebugClassLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"str = total return value",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
-    def test_input_int_return_untyped_tuple_str_and_int(self,caplog):
+    def test_input_int_return_untyped_tuple_str_and_int(self, caplog):
         with caplog.at_level(level=logging.DEBUG, logger=mocks_module_name()):
             mock = MockClass()
             mock.input_int_return_untyped_tuple_str_and_int(3, 3)
@@ -227,6 +234,7 @@ class TestDebugClassLogDecorator:
             variables=f"value1: int = 3, value2: int = 3",
             returns=f"tuple[str = total return value, int = 6]",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -241,6 +249,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
         assert_debug_test(
             caplog=caplog,
@@ -249,6 +258,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="NoneType = None",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
 
     @freeze_time(FREEZE_TIME)
@@ -263,6 +273,7 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )
         assert_debug_test(
             caplog=caplog,
@@ -271,4 +282,5 @@ class TestDebugClassLogDecorator:
             variables="value1: int = 3, value2: int = 3",
             returns="int = 6",
             working_directory=mocks_working_directory(),
+            is_async=False
         )

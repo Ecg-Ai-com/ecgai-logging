@@ -1,18 +1,12 @@
 import logging
 import sys
-from pathlib import Path
-
-from freezegun import freeze_time
 
 import colorlog
-import pytest
-from fluentcheck import Is
+from freezegun import freeze_time
 
-from src.ecgai_logging.log_decorator import log
 from tests.mocks import (
     mocks_module_name,
     input_int_return_none,
-    mocks_working_directory,
     input_int_return_typed_int,
     input_int_return_untyped_int,
     input_int_return_typed_str,
@@ -21,23 +15,17 @@ from tests.mocks import (
     input_int_return_none_call_sub_function,
     input_int_return_typed_int_call_sub_function,
 )
-
 # @pytest.fixture
 # def root_logger():
-from tests.test_log_decorator import remove_spaces_from_caplog, assert_info_test
+from tests.test_log_decorator import assert_info_test, FREEZE_TIME
 
 logger = logging.getLogger(mocks_module_name())
-# logger.level = logging.DEBUG
-# stream_handler = logging.StreamHandler(sys.stdout)
-# logger.addHandler(stream_handler)
 handler = colorlog.StreamHandler(sys.stdout)
 handler.setFormatter(
     colorlog.ColoredFormatter("%(log_color)s%(levelname)s:%(name)s:%(message)s")
 )
 
 logger.addHandler(handler)
-
-FREEZE_TIME = "2021-09-14 03:21:34"
 
 
 class TestInfoFunctionLogDecorator:
