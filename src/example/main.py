@@ -1,7 +1,7 @@
 import logging.config
 
 from src.ecgai_logging.log_decorator import log
-from src.my_class import MyClass
+from src.example.my_class import MyClass
 
 logging.config.fileConfig('logging.conf')
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     my.just_testing4(2, 4, 6)
     my.just_testing5(2, 4, 6)
     my.just_testing6(2, 4, 6)
-    # my.just_testing9(9)
+    my.just_testing9(9)
     # my.just_testing10(9)
     # print(f'result {j}, {k}, {m}')
     # just_another_test(2, 5, 7)

@@ -45,8 +45,8 @@ class MyClass(object):
         try:
             g = j / 0
             return g
-        except ZeroDivisionError as e:
-            print(f'error found')
+        except ZeroDivisionError:
+            pass
 
     @log
     def just_testing10(self, j):
