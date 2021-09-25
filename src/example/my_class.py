@@ -46,7 +46,7 @@ class MyClass(object):
             g = j / 0
             return g
         except ZeroDivisionError:
-            pass
+            raise
 
     @log
     def just_testing10(self, j):
