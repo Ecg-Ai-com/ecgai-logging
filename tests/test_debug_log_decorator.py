@@ -151,7 +151,7 @@ class TestDebugFunctionLogDecorator:
 
         for log in caplog.messages:
             if 'Elapsed time:' in log:
-                value = ''.join(re.findall('\d*\.?\d+', log))
+                value = ''.join(re.findall(r'\d+\.\d+', log))
 
                 result = float(value)
                 if result > 0:
