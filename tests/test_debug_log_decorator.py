@@ -1,5 +1,5 @@
 import logging
-from datetime import timezone
+import re
 
 from freezegun import freeze_time
 
@@ -13,7 +13,7 @@ from tests.mocks import (
     MockClass,
     input_int_return_none_call_sub_function,
     input_int_return_typed_int_call_sub_function,
-    mocks_working_directory,
+    mocks_working_directory, elapsed_time_greater_than_zero,
 )
 # @pytest.fixture
 # def root_logger():
@@ -144,6 +144,32 @@ class TestDebugFunctionLogDecorator:
             working_directory=mocks_working_directory(),
             is_async=False,
         )
+
+    def test_debug_function_elapsed_time_greater_than_zero(self, caplog):
+        with caplog.at_level(level=logging.DEBUG, logger=mocks_module_name()):
+            elapsed_time_greater_than_zero(3, 3)
+
+        for log in caplog.messages:
+            if 'Elapsed time:' in log:
+                value = ''.join(re.findall('\d*\.?\d+', log))
+
+                result = float(value)
+                if result > 0:
+                    assert True
+                else:
+                    assert False
+
+                print(result)
+
+        # assert_debug_test(
+        #     caplog=caplog,
+        #     module_name=mocks_module_name(),
+        #     method_name="input_int_return_none",
+        #     variables="value1: int = 3, value2: int = 3",
+        #     returns="NoneType = None",
+        #     working_directory=mocks_working_directory(),
+        #     is_async=False,
+        # )
 
 
 class TestDebugClassLogDecorator:

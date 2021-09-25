@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 
 from src.ecgai_logging.log_decorator import log
@@ -57,6 +58,10 @@ def input_int_return_typed_str(value1: int, value2: int) -> str:
     _ = value1 + value2
     return "total return value"
 
+@log
+def elapsed_time_greater_than_zero(value1: int, value2: int):
+    time.sleep(0.1)
+
 
 # noinspection PyUnusedLocal
 @log
@@ -115,7 +120,7 @@ class MockClass:
 
     @log
     def input_int_return_typed_int_call_sub_function(
-        self, value1: int, value2: int
+            self, value1: int, value2: int
     ) -> int:
         return self.input_int_return_typed_int(value1, value2)
 

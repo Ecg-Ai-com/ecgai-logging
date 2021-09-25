@@ -32,7 +32,7 @@ def log(func):
             logger.debug(f"End time:              {finish_time}")
             difference = finish_time - start_time
             elapsed_time = difference.total_seconds()
-            logger.info(f"Elapsed time:           {elapsed_time}")
+            logger.info(f"Elapsed time:           {elapsed_time} seconds")
             logger.info(returns(result=result))
 
             logger.info(
@@ -106,10 +106,10 @@ def log(func):
             return f'Method type:           synchronous'
 
     def working_directory():
-        return f"Working directory:     {Path.cwd()}"
+        return f"Working directory:      {Path.cwd()}"
 
     def start_time_string():
-        return f"Start time:            {start_time}"
+        return f"Start time:             {start_time}"
 
     def variables(function, args, kwargs):
         return f"Variables:              {pre_function_variable_signature(function=function, args=args, kwargs=kwargs)}"
@@ -138,7 +138,7 @@ def log(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             nonlocal start_time
-            start_time = datetime.now()
+            start_time = datetime.utcnow()
             result = None
             try:
                 pre_function_log(func, args, kwargs, False)
