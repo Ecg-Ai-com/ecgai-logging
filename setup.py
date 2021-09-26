@@ -23,7 +23,7 @@ setup(
     name="ecgai-logging",
     version=VERSION,
     author="Rob Clapham",
-    author_email="<rob.clapham@gmail.com>",
+    author_email="<>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=long_description,
