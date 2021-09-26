@@ -154,7 +154,7 @@ class TestDebugFunctionLogDecorator:
                 value = ''.join(re.findall(r'\d+\.\d+', log))
 
                 result = float(value)
-                if result > 0:
+                if 0 < result < 1:
                     assert True
                 else:
                     assert False
