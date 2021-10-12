@@ -226,6 +226,22 @@ class TestDebugFunctionLogDecorator:
             working_directory=mocks_working_directory(),
             is_async=False,
         )
+
+    @freeze_time(FREEZE_TIME)
+    def test_debug_function_input_args_and_kwargs_in_args_and_kwargs(self, caplog):
+        with caplog.at_level(level=logging.DEBUG, logger=mocks_module_name()):
+            input_args_kwargs(3, 3, value1=3, value2=3)
+        assert_debug_test(
+            caplog=caplog,
+            module_name=mocks_module_name(),
+            method_name=f"input_args_kwargs",
+            variables=f"(3, 3), value1=3, value2=3",
+            returns=f"NoneType = None",
+            working_directory=mocks_working_directory(),
+            is_async=False,
+        )
+
+
 class TestDebugClassLogDecorator:
     @freeze_time(FREEZE_TIME)
     def test_debug_class_input_int_return_none(self, caplog):
