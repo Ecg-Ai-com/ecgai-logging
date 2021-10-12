@@ -13,7 +13,7 @@ from tests.mocks import (
     MockClass,
     input_int_return_none_call_sub_function,
     input_int_return_typed_int_call_sub_function,
-    mocks_working_directory, elapsed_time_greater_than_zero,
+    mocks_working_directory, elapsed_time_greater_than_zero, input_args, input_kwargs,
 )
 # @pytest.fixture
 # def root_logger():
@@ -170,6 +170,34 @@ class TestDebugFunctionLogDecorator:
         #     working_directory=mocks_working_directory(),
         #     is_async=False,
         # )
+
+    @freeze_time(FREEZE_TIME)
+    def test_debug_function_input_args(self, caplog):
+        with caplog.at_level(level=logging.DEBUG, logger=mocks_module_name()):
+            input_args(3, 3)
+        assert_debug_test(
+            caplog=caplog,
+            module_name=mocks_module_name(),
+            method_name=f"input_args",
+            variables=f"args: tuple = (3, 3)",
+            returns=f"NoneType = None",
+            working_directory=mocks_working_directory(),
+            is_async=False,
+        )
+
+    @freeze_time(FREEZE_TIME)
+    def test_debug_function_input_kwargs(self, caplog):
+        with caplog.at_level(level=logging.DEBUG, logger=mocks_module_name()):
+            input_kwargs(value1=3, value2=3)
+        assert_debug_test(
+            caplog=caplog,
+            module_name=mocks_module_name(),
+            method_name=f"input_kwargs",
+            variables=f"value1=3, value2=3",
+            returns=f"NoneType = None",
+            working_directory=mocks_working_directory(),
+            is_async=False,
+        )
 
 
 class TestDebugClassLogDecorator:

@@ -58,6 +58,7 @@ def input_int_return_typed_str(value1: int, value2: int) -> str:
     _ = value1 + value2
     return "total return value"
 
+
 @log
 def elapsed_time_greater_than_zero(value1: int, value2: int):
     time.sleep(0.1)
@@ -85,6 +86,18 @@ def exception_caught_and_not_raised(value1: int, value2: int):
 @log
 def exception_not_caught(value1: int, value2: int):
     _ = 5 / 0
+
+
+# noinspection PyUnusedLocal
+@log
+def input_args(*args):
+    return
+
+
+# noinspection PyUnusedLocal
+@log
+def input_kwargs(**kwargs):
+    return
 
 
 class MockClass:

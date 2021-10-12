@@ -1,7 +1,7 @@
 import functools
 import inspect
 import logging
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 
@@ -46,13 +46,17 @@ def log(func):
         args_display = []
         for a in bound_args.arguments.items():
             if a[0] != "self":
-                arg_display = f"{a[0]}: {type(a[1]).__name__} = {a[1]}"
+                if a[0] == 'kwargs':
+                    arg_display =', '.join([f"{k}={v!r}" for k, v in kwargs.items()])
+
+                else:
+                    arg_display = f"{a[0]}: {type(a[1]).__name__} = {a[1]}"
                 args_display.append(arg_display)
             loop_count += 1
 
         # TODO check display is correct for kwargs
-        kwargs_display = [f"{k}={v!r}" for k, v in kwargs.items()]
-        signature = ", ".join(args_display + kwargs_display)
+        # kwargs_display = [f"{k}={v!r}" for k, v in kwargs.items()]
+        signature = ", ".join(args_display)
         return signature
 
     def post_function_return_signature(result):
@@ -101,9 +105,9 @@ def log(func):
 
     def method_type(is_async):
         if is_async:
-            return f'Method type:            asynchronous'
+            return f"Method type:            asynchronous"
         else:
-            return f'Method type:           synchronous'
+            return f"Method type:           synchronous"
 
     def working_directory():
         return f"Working directory:      {Path.cwd()}"
@@ -118,6 +122,7 @@ def log(func):
         return f"Returns:                {post_function_return_signature(result=result)}"
 
     if inspect.iscoroutinefunction(func):
+
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
             nonlocal start_time
@@ -135,6 +140,7 @@ def log(func):
 
         return wrapper
     else:
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             nonlocal start_time
