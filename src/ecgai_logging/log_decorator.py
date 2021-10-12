@@ -46,16 +46,22 @@ def log(func):
         args_display = []
         for a in bound_args.arguments.items():
             if a[0] != "self":
+                arg_display = ''
                 if a[0] == 'kwargs':
-                    arg_display =', '.join([f"{k}={v!r}" for k, v in kwargs.items()])
+                    if len(kwargs) > 0:
+                        arg_display = ', '.join([f"{k}={v!r}" for k, v in kwargs.items()])
+
+                elif a[0] == 'args':
+                    if len(args) > 0:
+                        arg_display = str(args)
 
                 else:
                     arg_display = f"{a[0]}: {type(a[1]).__name__} = {a[1]}"
-                args_display.append(arg_display)
+
+                if len(arg_display) > 0:
+                    args_display.append(arg_display)
             loop_count += 1
 
-        # TODO check display is correct for kwargs
-        # kwargs_display = [f"{k}={v!r}" for k, v in kwargs.items()]
         signature = ", ".join(args_display)
         return signature
 

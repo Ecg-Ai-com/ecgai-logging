@@ -100,6 +100,11 @@ def input_kwargs(**kwargs):
     return
 
 
+@log
+def input_args_kwargs(*args, **kwargs):
+    return
+
+
 class MockClass:
     @log
     def input_int_return_none(self, value1: int, value2: int) -> None:
