@@ -8,7 +8,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 DESCRIPTION = 'Decorator function for function level logging'
 LONG_DESCRIPTION = 'Logging decorator for both sync and async functions. Logging is carried out at logging levels ' \
                    'DEBUG and INFO. ' \
