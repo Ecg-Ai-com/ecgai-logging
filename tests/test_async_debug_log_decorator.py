@@ -33,6 +33,7 @@ class TestDebugFunctionLogDecorator:
     @pytest.mark.asyncio
     async def test_debug_function_async_input_int_return_untyped_str(self, caplog):
         # result = await record_task
+        f = mocks_async_module_name()
         with caplog.at_level(level=logging.DEBUG, logger=mocks_async_module_name()):
             _ = await async_input_int_return_untyped_str(3, 3)
 
